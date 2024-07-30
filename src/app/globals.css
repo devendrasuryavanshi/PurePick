@@ -26,6 +26,11 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+
+header {
+  max-width: 100vw !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
