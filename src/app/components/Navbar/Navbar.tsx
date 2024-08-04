@@ -1,10 +1,13 @@
 "use client";
 import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button } from "@nextui-org/react";
-import { Slack } from "lucide-react";
+import { Slack, User } from "lucide-react";
 import { ThemeSwitcher } from "../ThemeSwitcher/ThemeSwitcher";
+import { useSession } from "next-auth/react";
+import UserDropDown from "./_components/UserDropDown";
 
 export default function App() {
+  const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
@@ -47,24 +50,34 @@ export default function App() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/about">
             Integrations
           </Link>
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <ThemeSwitcher/>
+          <ThemeSwitcher />
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
+        {status === "loading" ? (<div></div>) :
+          (
+            status === "authenticated" ? (
+              <UserDropDown />
+            ) : (
+              <>
+                <NavbarItem className="hidden lg:flex">
+                  <Link href="/login">Login</Link>
+                </NavbarItem>
+                <NavbarItem>
+                  <Button as={Link} color="primary" href="/signup" variant="flat">
+                    Sign Up
+                  </Button>
+                </NavbarItem>
+              </>
+            )
+          )
+        }
+      </NavbarContent >
       <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
@@ -81,6 +94,6 @@ export default function App() {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
-    </Navbar>
+    </Navbar >
   );
 }
