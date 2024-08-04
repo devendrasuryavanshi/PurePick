@@ -8,6 +8,16 @@ import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { redirectToPrevious } from "@/utils/redirectToPrevious";
+import { Link } from "@nextui-org/react";
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  age: number;
+  type: 'login' | 'signup';
+}
 
 export function SignupForm() {
   const router = useRouter();
@@ -18,6 +28,7 @@ export function SignupForm() {
     email: "",
     password: "",
     age: "",
+    type: 'signup'
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,7 +38,10 @@ export function SignupForm() {
       redirect: false
     });
     if (res?.error) {
-      alert("Error: "+res.error);
+      alert("Error: " + res.error);
+      if (res?.error == "User already exists. Please login.") {
+        router.push("/login");
+      }
     } else {
       redirectToPrevious();
     }
@@ -39,8 +53,17 @@ export function SignupForm() {
   };
 
   const handleEyeClick = () => {
-    setShowPassword(!showPassword);
-    document.getElementById("password")?.focus();
+    const passwordInput = document.getElementById('password') as HTMLInputElement | null;
+
+    if (passwordInput) {
+      setShowPassword((prevShowPassword) => !prevShowPassword);
+      setTimeout(() => {
+        if (passwordInput) {
+          passwordInput.focus();
+          passwordInput.setSelectionRange(passwordInput.value.length, passwordInput.value.length);
+        }
+      }, 0);
+    }
   };
 
   return (
@@ -54,7 +77,7 @@ export function SignupForm() {
           <LabelInputContainer>
             <Label htmlFor="firstName">First name</Label>
             <Input
-              
+
               name="firstName"
               id="firstName"
               placeholder="Dora"
@@ -131,7 +154,7 @@ export function SignupForm() {
           Sign up &rarr;
           <BottomGradient />
         </button>
-
+        <p className="pl-2 text-sm mt-4">Already have an account? <Link className="text-sm" underline="hover" href="/login">Log in</Link></p>
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 
         <div className="flex flex-col space-y-4">

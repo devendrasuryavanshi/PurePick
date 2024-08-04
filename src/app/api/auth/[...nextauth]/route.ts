@@ -35,41 +35,61 @@ export const authOptions: NextAuthOptions = {
         age: { label: "Age", type: "number" },
       },
       async authorize(credentials) {
-        const { email, password, firstName, lastName, age } = credentials as any;
+        const { email, password, firstName, lastName, age, type } = credentials as any;
 
-        // Validate input
-        if (!email || !password || !firstName || !lastName || !age) {
+        if (!email || !password) {
           console.error("Missing required fields.");
           throw new Error("Missing required fields.");
         }
 
-        try {
-          await connectDB();
-          const existingUser = await User.findOne({ email });
+        await connectDB();
+        const existingUser = await User.findOne({ email });
+        if (existingUser && existingUser.authType === 'Google') {
+          throw new Error("Incorrect authentication method. Please sign in with Google.");
+        }
 
-          if (existingUser) {
-            if (existingUser.authType === 'Google') {
-              throw new Error("Incorrect authentication method. Please sign in with Google.");
-            } else if(bcrypt.compareSync(password, existingUser.password)) {
-              return existingUser;
+        if (type === 'login') {
+          try {
+            if (existingUser) {
+              if (bcrypt.compareSync(password, existingUser.password)) {
+                return existingUser;
+              } else {
+                throw new Error("Incorrect password.");
+              }
             } else {
-              throw new Error("Incorrect password.");
+              throw new Error("User not found.");
             }
+          } catch (error) {
+            console.error("Error authorizing user:", error);
+            throw new Error(error instanceof Error ? error.message : "Error authorizing user.");
+          }
+        } else if (type === 'signup') {
+          if(existingUser) {
+            throw new Error("User already exists. Please login.");
+          }
+          // Validate input
+          if (!email || !password || !firstName || !lastName || !age) {
+            console.error("Missing required fields.");
+            throw new Error("Missing required fields.");
           }
 
-          const newUser = await saveNewUser({
-            email,
-            password,
-            firstName,
-            lastName,
-            age: Number(age),
-            authType: 'Credentials',
-          });
+          try {
+            const newUser = await saveNewUser({
+              email,
+              password,
+              firstName,
+              lastName,
+              age: Number(age),
+              authType: 'Credentials',
+            });
 
-          return newUser;
-        } catch (error) {
-          console.error("Error authorizing user:", error);
-          throw new Error(error instanceof Error ? error.message : "Error authorizing user.");
+            return newUser;
+          } catch (error) {
+            console.error("Error authorizing user:", error);
+            throw new Error(error instanceof Error ? error.message : "Error authorizing user.");
+          }
+        } else {
+          throw new Error("Invalid type.");
         }
       }
     })
