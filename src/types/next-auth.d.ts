@@ -6,7 +6,7 @@ declare module "next-auth" {
         firstName: string;
         lastName?: string;
         image?: string;
-        age?: Number;
+        age?: number;
         email: string;
     }
 
@@ -20,7 +20,7 @@ declare module "next-auth" {
             email: string;
         };
         url: {
-            previousUrl?: String;
+            previousUrl?: string;
         }
     }
 
@@ -28,5 +28,6 @@ declare module "next-auth" {
         id?: string;
         firstName?: string;
         lastName?: string;
+        age?: number;
     }
 }

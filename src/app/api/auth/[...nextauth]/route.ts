@@ -6,7 +6,7 @@ import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import connectDB from "@/lib/dbConnect";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: any = {
   providers: [
     // Google Provider
     GoogleProvider({
@@ -95,7 +95,7 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user, profile }) {
+    async jwt({ token, user, profile }: any) {
       if (profile) {
         const email = profile.email as string;
         const firstName = (profile as any).given_name as string;
@@ -138,7 +138,7 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.firstName = token.firstName as string;
