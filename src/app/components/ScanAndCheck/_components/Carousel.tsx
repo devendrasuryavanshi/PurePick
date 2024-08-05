@@ -16,10 +16,10 @@ export function CarouselProduct({ removeImg, images }: { removeImg: (index: numb
     <Carousel className="w-4/5">
       <CarouselContent>
         {images.map((image, index) => (
-          <CarouselItem key={index}>
+          <CarouselItem className="flex justify-center items-center" key={index}>
             <div className="p-1">
-              <Card>
-                <Badge className="w-6 h-6 cursor-pointer" onClick={() => removeImg(index)} content={<X strokeWidth={5} />} color="danger">
+              <Card className="bg-red-400">
+                <Badge className="w-6 h-6 cursor-pointer flex justify-center items-center" onClick={() => removeImg(index)} content={<X strokeWidth={5} />} color="danger">
                   <CardContent className="flex aspect-square items-center justify-center p-1">
                     <Image className="max-h-72" src={image instanceof File ? URL.createObjectURL(image) : image} alt="Captured"/>
                   </CardContent>

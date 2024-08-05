@@ -17,9 +17,14 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
     const webcamRef = useRef<Webcam>(null);
     const frameRef = useRef<HTMLDivElement>(null);
     const [playJoinSound] = useSound('/Sounds/scan2.mp3',);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        if(!isOpen) {
+        setIsClient(true);
+    }, []);
+
+    useEffect(() => {
+        if (!isOpen) {
             setImages([]);
             setCameraEnabled(false);
         }
@@ -51,10 +56,10 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
                 if (webcam && frame && webcam.video) {
                     const video = webcam.video as HTMLVideoElement;
                     video.classList.add('flash');
-                    frame.classList.add('bg-white');
+                    frame.classList.add('bg-white', 'border-4', 'border-gray-600');
                     setTimeout(() => {
                         video.classList.remove('flash');
-                        frame.classList.remove('bg-white');
+                        frame.classList.remove('bg-white', 'border-4', 'border-gray-600');
                     }, 200);
                 }
             }
@@ -70,51 +75,15 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
             <Modal
                 isOpen={isOpen}
                 backdrop={"blur"}
-                placement={"auto"}
+                placement={"bottom"}
                 onOpenChange={onOpenChange}
+                scrollBehavior={isClient && window.innerHeight < 500 ? 'outside' : 'normal'}
             >
-                <ModalContent className="justify-center items-center">
+                <ModalContent className="justify-center items-center h-auto">
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex justify-center items-center gap-3">Select Pic<InfoTooltip /></ModalHeader>
-                            <ModalBody className="flex justify-center items-center gap-3 px-10 mt-2">
-                                <div className="w-full h-72 flex flex-col justify-center items-center">
-                                    {cameraEnabled ? (
-                                        <>
-                                            <div
-                                                className="rounded-xl border-4 border-gray-600"
-                                                ref={frameRef}
-                                            >
-                                                <Webcam
-                                                    className="rounded-xl"
-                                                    audio={false}
-                                                    screenshotFormat="image/jpeg"
-                                                    ref={webcamRef}
-                                                    width={600}
-                                                    height={600}
-                                                />
-                                            </div>
-                                            <button disabled={images.length < 2 ? false : true} className={`bg-black rounded-full p-1 relative bottom-14 ${images.length < 2 ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
-                                                <CircleDot
-                                                    className={`${images.length < 2 ? 'opacity-100' : 'opacity-50'}`}
-                                                    color="white"
-                                                    size={40}
-                                                    onClick={captureImage}
-                                                />
-                                            </button></>
-                                    ) : (images.length != 0 ?
-                                        (<CarouselProduct removeImg={removeImage} images={images} />) :
-                                        (
-                                            <Tooltip showArrow={true} color={"foreground"} content={"Drag & drop some files here, or click to select files"} className="capitalize">
-                                                <div {...getRootProps()}>
-                                                    <input {...getInputProps()} />
-                                                    <Image src="https://nikhil-belide.netlify.app/images/aboutgif.gif" alt="demo image"/>
-                                                </div>
-                                            </Tooltip>
-                                        )
-                                    )
-                                    }
-                                </div>
+                            <ModalBody className="flex h-auto p-0 m-0 justify-center items-center gap-3 px-10">
                                 {images.length > 0 && cameraEnabled &&
                                     <div className="flex justify-center items-center gap-3">
                                         {images.map((image, index) => (
@@ -129,6 +98,37 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
                                         ))}
                                     </div>
                                 }
+                                <div className="w-full min-h-72 flex flex-col justify-center items-center">
+                                    {cameraEnabled ? (
+                                        <>
+                                            <div
+                                                className="rounded-2xl"
+                                                ref={frameRef}
+                                            >
+                                                <Webcam
+                                                    videoConstraints={{ facingMode: 'environment' }}
+                                                    className="rounded-xl border-4 border-gray-600"
+                                                    audio={false}
+                                                    screenshotFormat="image/jpeg"
+                                                    ref={webcamRef}
+                                                    width={600}
+                                                    height={600}
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (images.length != 0 ?
+                                        (<CarouselProduct removeImg={removeImage} images={images} />) :
+                                        (
+                                            <Tooltip showArrow={true} color={"foreground"} content={"Drag & drop some files here, or click to select files"} className="capitalize">
+                                                <div {...getRootProps()}>
+                                                    <input {...getInputProps()} />
+                                                    <Image src="https://nikhil-belide.netlify.app/images/aboutgif.gif" alt="demo image" width={'100%'} />
+                                                </div>
+                                            </Tooltip>
+                                        )
+                                    )
+                                    }
+                                </div>
                             </ModalBody>
                             <ModalFooter className="w-full flex justify-between gap-4">
                                 <div className="flex justify-center items-center gap-2">
@@ -147,6 +147,17 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
                                         </Button>
                                     </Tooltip>
                                 </div>
+                                {cameraEnabled && (
+                                    <button disabled={images.length < 2 ? false : true} className={`bg-black rounded-full ${images.length < 2 ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
+                                        <CircleDot
+                                            strokeWidth={3}
+                                            className={`${images.length < 2 ? 'opacity-100' : 'opacity-50'}`}
+                                            color="white"
+                                            size={40}
+                                            onClick={captureImage}
+                                        />
+                                    </button>
+                                )}
                                 <Button className="text-lg font-bold" color="primary">Scan<ArrowUpRight strokeWidth={3} /></Button>
                             </ModalFooter>
                         </>
