@@ -45,7 +45,7 @@ export default function App() {
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">
+          <Link href="/scan-and-check" aria-current="page">
             Customers
           </Link>
         </NavbarItem>
