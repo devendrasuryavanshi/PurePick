@@ -15,6 +15,10 @@ const nextConfig = {
                 hostname: 'https://nikhil-belide.netlify.app/images',
             },
             {
+                protocol: 'https',
+                hostname: 'https://cdni.iconscout.com/illustration/premium/thumb/'
+            },
+            {
                 protocol: "http",
                 hostname: "**",
             },
