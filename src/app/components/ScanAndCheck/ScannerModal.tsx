@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useRef, useState } from "react";
 import {
     Modal,
@@ -12,7 +13,6 @@ import {
     Spinner,
 } from "@nextui-org/react";
 import {
-    ArrowUpRight,
     Camera,
     CameraOff,
     CircleDot,
@@ -26,6 +26,10 @@ import { useDropzone } from "react-dropzone";
 import { CarouselProduct } from "./_components/Carousel";
 import useSound from 'use-sound';
 import { toast } from 'sonner';
+import { MultiStepLoaderDemo } from "./_components/MultiStepLoader";
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:8000');
 
 interface ScannerModalProps {
     isOpen: boolean;
@@ -41,11 +45,12 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
     const [cameraEnabled, setCameraEnabled] = useState<boolean>(false);
     const [torchEnabled, setTorchEnabled] = useState<boolean>(false);
     const [videoConstraints, setVideoConstraints] = useState<{ width: number; height: number; facingMode: string } | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
     const webcamRef = useRef<Webcam>(null);
     const frameRef = useRef<HTMLDivElement>(null);
     const [playJoinSound] = useSound('/Sounds/scan2.mp3');
     const [isClient, setIsClient] = useState(false);
+    const [MultiStepLoading, setMultiStepLoading] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -62,7 +67,7 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
         setCameraEnabled(false);
         setImages([]);
         setTorchEnabled(false);
-        setLoading(true);
+        setLoading(false);
     };
 
     // Dropzone configuration
@@ -180,11 +185,13 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
 
             const permissionStatus = await navigator.permissions.query({ name: "camera" as PermissionName });
             if (permissionStatus.state === "granted") {
+                setLoading(true);
                 if (!videoConstraints) {
                     getResolution();
                 }
                 return true;
             } else if (permissionStatus.state === "prompt") {
+                setLoading(true);
                 toast.warning("Camera permission requested.");
                 const accessGranted = await getResolution();
                 if (accessGranted) {
@@ -233,7 +240,7 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
             const permissionStatus = await navigator.permissions.query({ name: "camera" as PermissionName });
 
             permissionStatus.onchange = () => {
-                if (permissionStatus.state === "denied") {
+                if (permissionStatus.state !== "granted") {
                     setCameraEnabled(false);
                     setTorchEnabled(false);
                 }
@@ -249,7 +256,7 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
             setCameraEnabled(false);
             setTorchEnabled(false);
         } else {
-            setLoading(true);
+            // setLoading(true);
             const accessGranted = await checkCameraSupportAndPermissions();
             if (accessGranted) {
                 setCameraEnabled(true);
@@ -258,6 +265,75 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
             setLoading(false);
         }
     };
+
+    async function dataUrlToFile(dataUrl: string, filename: string) {
+        try {
+            const response = await fetch(dataUrl);
+            const blob = await response.blob();
+            return new File([blob], filename, { type: blob.type });
+        } catch (error) {
+            console.error("Error converting data URL to File:", error);
+        }
+    }
+
+    const formatDate = () => {
+        const now = new Date();
+        const year = now.getFullYear().toString().slice(-2);
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+
+        return `${year}${month}${day}-${hours}${minutes}${seconds}${milliseconds}`;
+    };
+
+    const handleAnalyze = async () => {
+        if (images.length < 2) {
+            toast.warning("Please select exactly 2 images.");
+            return;
+        }
+
+        setMultiStepLoading(true);
+
+        try {
+            // convert images to formdata
+            images.forEach(async (file) => {
+                if (file instanceof File) {
+                    console.log('File:', file.name);
+                    socket.emit("upload", { file: file, fileName: file.name }, (status: any) => {
+                        console.log(status);
+                    });
+                } else if (typeof file === 'string') {
+                    // convert string to file
+                    const fileDate = formatDate();
+                    const newFile = await dataUrlToFile(file, `image-${fileDate}.jpg`);
+                    if (newFile) {
+                        socket.emit("upload", { file: newFile, fileName: newFile.name }, (status: any) => {
+                            console.log(status);
+                        });
+                    } else {
+                        console.error("Failed to convert data URL to File");
+                    }
+                }
+            });
+        } catch (error) {
+            toast.error("Error sending images to server.");
+            console.log(error);
+        }
+
+        // Listen for confirmation from the server
+        socket.on('upload-success', () => {
+            toast.success("Images uploaded successfully.");
+        });
+
+        socket.on('upload-error', () => {
+            toast.error("Error uploading images.");
+        });
+
+        // setMultiStepLoading(false);
+    }
 
     // Render the modal component
     return (
@@ -300,33 +376,25 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
                                 </div>
                             )}
                             <div className="w-full min-h-72 flex flex-col justify-center items-center">
-                                {cameraEnabled && videoConstraints ? (
-                                    <>
-                                        {loading ? (
-                                            <Spinner label="Opening Camera" color="warning" />
-                                        ) : (
-                                            <div className="rounded-2xl aspect-square" ref={frameRef}>
-                                                <Webcam
-                                                    videoConstraints={videoConstraints}
-                                                    className="rounded-xl border-0 border-gray-600"
-                                                    audio={false}
-                                                    screenshotFormat="image/jpeg"
-                                                    screenshotQuality={1}
-                                                    ref={webcamRef}
-                                                />
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (images.length !== 0 ? (
-                                    <CarouselProduct removeImg={removeImage} images={images} />
-                                ) : (
-                                    <Tooltip showArrow={true} color={"foreground"} content={"Drag & drop some files here, or click to select files"} className="capitalize">
-                                        <div {...getRootProps()}>
-                                            <input {...getInputProps()} />
-                                            <Image src="https://cdni.iconscout.com/illustration/premium/thumb/female-photographer-doing-product-photoshoot-4658374-3880537.png?f=webp" alt="demo image" width={'100%'} />
-                                        </div>
-                                    </Tooltip>
-                                ))}
+                                {loading ? (<Spinner label="Loading Camera" color="default" />) :
+                                    cameraEnabled && videoConstraints ? (
+                                        <div className="rounded-2xl aspect-square" ref={frameRef}>
+                                            <Webcam
+                                                videoConstraints={videoConstraints}
+                                                className="rounded-xl border-0 border-gray-600"
+                                                audio={false}
+                                                screenshotFormat="image/jpeg"
+                                                screenshotQuality={1}
+                                                ref={webcamRef}
+                                            />
+                                        </div>) :
+                                        images.length !== 0 ? (<CarouselProduct removeImg={removeImage} images={images} />) :
+                                            (<Tooltip showArrow={true} color={"foreground"} content={"Drag & drop some files here, or click to select files"} className="capitalize">
+                                                <div {...getRootProps()}>
+                                                    <input {...getInputProps()} />
+                                                    <Image src="https://cdni.iconscout.com/illustration/premium/thumb/female-photographer-doing-product-photoshoot-4658374-3880537.png?f=webp" alt="demo image" width={'100%'} />
+                                                </div>
+                                            </Tooltip>)}
                             </div>
                         </ModalBody>
                         <ModalFooter className="w-full flex justify-between items-center gap-4">
@@ -362,7 +430,8 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
                                     </Tooltip>
                                 </div>
                             )}
-                            <Button className="text-lg font-bold" color="primary">Scan<ArrowUpRight strokeWidth={3} /></Button>
+                            {MultiStepLoading && (<MultiStepLoaderDemo loading={MultiStepLoading} setLoading={setMultiStepLoading} />)}
+                            <Button onClick={() => handleAnalyze()} className={`text-lg font-bold ${images.length < 2 ? 'cursor-not-allowed' : 'cursor-pointer'}`} color="primary" radius="full">Analyze</Button>
                         </ModalFooter>
                     </>
                 )}
