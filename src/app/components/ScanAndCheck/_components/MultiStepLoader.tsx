@@ -4,37 +4,62 @@ import { MultiStepLoader as Loader } from "@/components/ui/multi-step-loader";
 import { IconSquareRoundedX } from "@tabler/icons-react";
 
 const loadingStates = [
+    // First entry
     {
-        text: "Sending images",
+        progress: {
+            text: "Sending images",
+            desc: "This depends on your internet connection",
+        },
+        success: {
+            text: "Sent images",
+            desc: "Your images have been sent successfully",
+        }
     },
+    // Second entry
     {
-        text: "Travelling in a flight",
+        progress: {
+            text: "Uploading data",
+            desc: "Please wait while we upload your data",
+        },
+        success: {
+            text: "Uploaded",
+            desc: "Your data has been uploaded successfully",
+        }
     },
+    // Third entry
     {
-        text: "Meeting Tyler Durden",
-    },
-    {
-        text: "He makes soap",
-    },
-    {
-        text: "We goto a bar",
-    },
-    {
-        text: "Start a fight",
-    },
-    {
-        text: "We like it",
-    },
-    {
-        text: "Welcome to F**** C***",
-    },
+        progress: {
+            text: "Processing",
+            desc: "We are processing your request",
+        },
+        success: {
+            text: "Completed",
+            desc: "The process completed successfully",
+        }
+    }
 ];
 
-export function MultiStepLoaderDemo({ loading, setLoading }: { loading: boolean; setLoading: (loading: boolean) => void }) {
+
+export function MultiStepLoaderDemo({
+    loading,
+    setLoading,
+    status,
+    setStatus,
+    statusInfo,
+    setStatusInfo,
+}: {
+    loading: boolean;
+    status: string;
+    setStatus: (status: string) => void;
+    statusInfo: { text: string; desc: string };
+    setLoading: (loading: boolean) => void;
+    setStatusInfo: (statusInfo: { text: string; desc: string }) => void;
+}) {
+
     return (
         <div className="w-full h-[60vh] flex items-center justify-center">
             {/* Core Loader Modal */}
-            <Loader loadingStates={loadingStates} loading={loading} duration={2000} />
+            <Loader loadingStates={loadingStates} loading={loading} status={status} setStatus={setStatus} statusInfo={statusInfo} setStatusInfo={setStatusInfo} />
 
             {/* The buttons are for demo only, remove it in your actual code ⬇️ */}
             <button
@@ -58,4 +83,4 @@ export function MultiStepLoaderDemo({ loading, setLoading }: { loading: boolean;
             )}
         </div>
     );
-}
+};
