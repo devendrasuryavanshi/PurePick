@@ -72,7 +72,7 @@ const LoaderCore = ({
         return (
           <motion.div
             key={index}
-            className={cn("text-left flex gap-2 mb-4")}
+            className={cn("text-left flex gap-2 mb-4 w-80")}
             initial={{ opacity: 0, y: -(value * 40) }}
             animate={{ opacity: opacity, y: -(value * 40) }}
             transition={{ duration: 0.5 }}
@@ -90,7 +90,7 @@ const LoaderCore = ({
                   >
                     {loadingState.success.text}
                   </span>
-                  <span className="text-zinc-500 text-sm">
+                  <span className="text-zinc-800 dark:text-zinc-300 text-sm">
                     {loadingState.success.desc}
                   </span>
                 </div>
@@ -119,7 +119,7 @@ const LoaderCore = ({
                   >
                     {status === 'success' ? loadingState.success.text : status === 'error' ? statusInfo.text : loadingState.progress.text}
                   </span>
-                  <span className="text-zinc-500 text-sm">
+                  <span className="text-zinc-800 dark:text-zinc-300 text-sm">
                     {status === 'success' ? loadingState.success.desc : status === 'error' ? statusInfo.desc : loadingState.progress.desc}
                   </span>
                 </div>
@@ -144,7 +144,7 @@ const LoaderCore = ({
                   >
                     {loadingState.progress.text}
                   </span>
-                  <span className="text-zinc-500 text-sm">
+                  <span className="text-zinc-800 dark:text-zinc-300 text-sm">
                     {loadingState.progress.desc}
                   </span>
                 </div>

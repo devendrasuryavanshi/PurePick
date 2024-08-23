@@ -31,8 +31,9 @@ import io from 'socket.io-client';
 import { createCanvas, loadImage } from 'canvas';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { BarcodeFormat, BrowserMultiFormatReader, ResultMetadataType } from '@zxing/library';
 
-const socket = io('http://localhost:8000');
+const socket = io('http://localhost:8000' || 'https://purepick-backend.vercel.app/');
 
 interface ScannerModalProps {
     isOpen: boolean;
@@ -398,11 +399,11 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
             }
 
         });
-        setCheckingAuth(false);
 
         // Check if authentication failed
         if (authStatus.authenticated === null) {
             toast.error("Server is not responding. Please try again later.");
+            setCheckingAuth(false);
             return;
         }
         if (!authStatus.authenticated) {
@@ -415,17 +416,20 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
                     </Link>
                 )
             });
+            setCheckingAuth(false);
             return;
         }
 
-        setMultiStepLoading(true);
-
         try {
-            let imageData: { file: File; fileName: string }[] = [];
+            let imageData: { file: File; fileName: string, barcodeInfo: any }[] = [];
+
+            const codeReader = new BrowserMultiFormatReader();
+
             // Convert images to an array of objects
             await Promise.all(images.map(async (image) => {
                 let file: File | undefined;
                 let fileName: string | undefined;
+                let barcodeInfo: any | undefined;
 
                 if (image instanceof File) {
                     file = image;
@@ -444,12 +448,44 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
                 }
 
                 if (file && fileName) {
-                    imageData.push({ file, fileName });
+                    const fileReader = new FileReader();
+                    fileReader.readAsDataURL(file);
+
+                    await new Promise<void>((resolve, reject) => {
+                        fileReader.onload = async () => {
+                            try {
+                                const imageUrl = fileReader.result as string;
+                                const imgElement = document.createElement('img');
+                                imgElement.src = imageUrl;
+
+                                imgElement.onload = async () => {
+                                    try {
+                                        const result = await codeReader.decodeFromImageElement(imgElement);
+                                        barcodeInfo = {
+                                            rawText: result.getText(),
+                                            barcodeFormat: BarcodeFormat[result.getBarcodeFormat()],
+                                            parsedResult: result.getText(),
+                                        };
+                                        toast("barcode data: "+barcodeInfo.rawText);
+                                        resolve();
+                                    } catch (err) {
+                                        resolve();
+                                    }
+                                };
+                            } catch (err) {
+                                resolve();
+                            }
+                        };
+                    });
+                    imageData.push({ file, fileName, barcodeInfo });
                 } else {
                     toast.error("Failed to convert data URL to File");
                     return;
                 }
             }));
+
+            setCheckingAuth(false);
+            setMultiStepLoading(true);
 
             // Emit the imageData array to the server
             socket.emit("upload", imageData, (status: any, message: string) => {
@@ -468,17 +504,17 @@ export default function ScannerModal({ isOpen, onOpenChange }: ScannerModalProps
             console.log(error);
         }
 
-        // setTimeout(() => {
-        //     setStatus('success');
-        // }, 3000);
-
-        // Listen for confirmation from the server
-        socket.on('upload-success', () => {
-            toast.success("Images uploaded successfully.");
-        });
-
-        socket.on('upload-error', () => {
-            toast.error("Error uploading images.");
+        socket.on("text-extraction", (data: { isSuccess: boolean; message: string }) => {
+            console.log("text-extraction");
+            if (!data.isSuccess) {
+                setStatus('error');
+                setStatusInfo({
+                    text: "Extraction Failed",
+                    desc: data.message,
+                })
+            } else {
+                setStatus('success');
+            }
         });
 
         // setMultiStepLoading(false);

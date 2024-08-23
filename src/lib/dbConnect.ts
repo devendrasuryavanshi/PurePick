@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 
+const dbURL = process.env.ATLASDB_URL;
+
 const connectDB = async () => {
   if (mongoose.connections[0].readyState) {
     return;
   }
-
-  await mongoose.connect("mongodb://127.0.0.1:27017/purepick");
+  if (dbURL) {
+    await mongoose.connect(dbURL);
+  }
 
   console.log("MongoDB connected");
 };

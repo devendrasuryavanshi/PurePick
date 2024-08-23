@@ -18,12 +18,12 @@ const loadingStates = [
     // Second entry
     {
         progress: {
-            text: "Uploading data",
-            desc: "Please wait while we upload your data",
+            text: "Extracing inforamtion",
+            desc: "Exctracting information from images",
         },
         success: {
-            text: "Uploaded",
-            desc: "Your data has been uploaded successfully",
+            text: "Extracted information",
+            desc: "Information has been extracted successfully",
         }
     },
     // Third entry
