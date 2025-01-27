@@ -54,7 +54,7 @@ const authOptions: any = {
 
                     // otp verify
                     try {
-                        const response = await fetch('https://test-eight-mu-85.vercel.app/api/verify-otp', {
+                        const response = await fetch('https://purepick.vercel.app/api/verify-otp', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
