@@ -3,19 +3,15 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
     // Check both possible cookie names that NextAuth uses
-    const authToken = request.cookies.get("next-auth.session-token") || 
-                     request.cookies.get("__Secure-next-auth.session-token");
-    
+    const authToken = request.cookies.get("next-auth.session-token") ||
+        request.cookies.get("__Secure-next-auth.session-token");
+
     const path = request.nextUrl.pathname;
 
-    // For profile routes - must be logged in
-    if (path.startsWith('/profile') || path.startsWith('/feedback') || path.startsWith('/product-history')) {
-        if (!authToken) {
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
+    if (!authToken && (path.startsWith('/profile') || path.startsWith('/feedback') || path.startsWith('/product-history') || path.startsWith('/admin'))) {
+        return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // For auth routes - must be logged out
     if (path === '/login' || path === '/signup') {
         if (authToken) {
             return NextResponse.redirect(new URL('/', request.url));
@@ -32,6 +28,7 @@ export const config = {
         '/login',
         '/product-history',
         '/feedback',
+        '/admin/:path*',
     ]
 };
 
