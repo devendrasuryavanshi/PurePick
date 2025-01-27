@@ -39,6 +39,7 @@ const AdminDashboard = () => {
                 });
 
                 if (!response.ok) {
+                    toast.error('You are not authorized to access this page');
                     router.push('/');
                     return;
                 }
@@ -54,7 +55,7 @@ const AdminDashboard = () => {
             setIsLoading(false);
         };
 
-        if (session?.user?.id && products.length === 0) {
+        if (session?.user?.id && products.length === 0 && admins.length === 0) {
             fetchDashboardData();
         }
     }, [session, products.length, router]);
