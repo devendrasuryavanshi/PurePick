@@ -11,7 +11,7 @@
 PurePick revolutionizes how consumers make product choices by providing real-time, AI-powered analysis of consumer products. Our platform combines advanced image processing, natural language understanding, and comprehensive health analysis to deliver instant insights about products.
 
 <div align="center">
-  <img src="public/assets/demo.gif" alt="PurePick Demo" width="600"/>
+  <img src="public/assets/demo1.png" alt="PurePick Demo" width="1000"/>
 </div>
 
 ## ✨ Key Features
@@ -23,7 +23,7 @@ PurePick revolutionizes how consumers make product choices by providing real-tim
 - **Real-time Processing**: Instant feedback and results
 
 <div align="center">
-  <img src="public/assets/scanning.png" alt="Scanning Feature" width="400"/>
+  <img src="public/assets/scanning-demo.png" alt="Scanning Feature" width="1000"/>
 </div>
 
 ### 🤖 AI Analysis Engine
@@ -34,7 +34,7 @@ PurePick revolutionizes how consumers make product choices by providing real-tim
 - **792+ Date Format Recognition**: Advanced manufacturing and expiry date detection
 
 <div align="center">
-  <img src="public/assets/analysis.png" alt="AI Analysis" width="400"/>
+  <img src="public/assets/demo2.png" alt="AI Analysis" width="1000"/>
 </div>
 
 ### 💬 Interactive AI Chat
@@ -42,6 +42,10 @@ PurePick revolutionizes how consumers make product choices by providing real-tim
 - **Health Recommendations**: Personalized health insights
 - **Real-time Updates**: Dynamic information processing
 - **Multi-turn Dialogue**: Natural conversation flow
+
+<div align="center">
+  <img src="public/assets/chat-demo.png" alt="AI Analysis" width="1000"/>
+</div>
 
 ### 📊 Smart Dashboard
 - **Product History**: Track and manage scanned products
@@ -158,23 +162,27 @@ We welcome contributions! Please follow these steps:
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="public/assets/dashboard.png" alt="Dashboard" width="400"/>
-  <img src="public/assets/chat.png" alt="AI Chat" width="400"/>
-  <img src="public/assets/analysis-detail.png" alt="Analysis Detail" width="400"/>
-  <img src="public/assets/ingredients.png" alt="Ingredients" width="400"/>
-</div>
-
-## 📱 Mobile View
-
-<div align="center">
-  <img src="public/assets/mobile-1.png" alt="Mobile View 1" height="400"/>
-  <img src="public/assets/mobile-2.png" alt="Mobile View 2" height="400"/>
+  <div style="display: inline-block; margin: 10px;">
+    <img src="public/assets/demo1.png" alt="demo1" width="1000"/>
+    <img src="public/assets/scanning-demo.png" alt="AI Chat" width="1000"/>
+  </div>
+  <div style="display: inline-block; margin: 10px;">
+    <img src="public/assets/demo2.png" alt="Analysis Detail" width="1000"/>
+    <img src="public/assets/nutrition-demo.png" alt="Ingredients" width="1000"/>
+  </div>
+  <div style="display: inline-block; margin: 10px;">
+    <img src="public/assets/alternative-demo.png" alt="alt" width="1000"/>
+    <img src="public/assets/compare-demo.png" alt="alt" width="1000"/>
+  </div>
+  <div style="display: inline-block; margin: 10px;">
+    <img src="public/assets/chat-demo.png" alt="chat" width="1000"/>
+  </div>
 </div>
 
 ---
 
 <div align="center">
-  <p>Made with ❤️ by the PurePick Team</p>
+  <p>Built with 💻 and ❤️ by Devendra Suryavanshi</p>
   <p>
     <a href="https://purepick.vercel.app">Website</a>
     ·
