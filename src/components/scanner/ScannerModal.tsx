@@ -75,7 +75,6 @@ const ScannerModal = ({ isOpen, onOpenChange }: ScannerModalProps) => {
         setLoading(false);
     };
 
-
     const updateLoadingState = (data: any, step: number) => {
         setStatus('success');
         if (step < loadingStates.length - 1) {
