@@ -170,7 +170,7 @@ export async function POST(req: NextRequest) { // send otp
                     <div class="container">
                         <div class="header">
                             <div class="logo">
-                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNsYWNrIj48cmVjdCB3aWR0aD0iMyIgaGVpZ2h0PSI4IiB4PSIxMyIgeT0iMiIgcng9IjEuNSIvPjxwYXRoIGQ9Ik0xOSA4LjVWMTBoMS41QTEuNSAxLjUgMCAxIDAgMTkgOC41Ii8+PHJlY3Qgd2lkdGg9IjMiIGhlaWdodD0iOCIgeD0iOCIgeT0iMTQiIHJ4PSIxLjUiLz48cGF0aCBkPSJNNSAxNS41VjE0SDMuNUExLjUgMS41IDAgMSAwIDUgMTUuNSIvPjxyZWN0IHdpZHRoPSI4IiBoZWlnaHQ9IjMiIHg9IjE0IiB5PSIxMyIgcng9IjEuNSIvPjxwYXRoIGQ9Ik0xNS41IDE5SDE0djEuNWExLjUgMS41IDAgMSAwIDEuNS0xLjUiLz48cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSIzIiB4PSIyIiB5PSI4IiByeD0iMS41Ii8+PHBhdGggZD0iTTguNSA1SDEwVjMuNUExLjUgMS41IDAgMSAwIDguNSA1Ii8+PC9zdmc+" alt="PurePick" width="120" />
+                                <img src="https://drive.google.com/thumbnail?id=10bNWz4ttMoiOl6tw7NC58rFnQ7t8MmKI&sz=s4000" alt="PurePick" width="120" />
                             </div>
                             <h1 style="margin: 0; font-size: 28px;">Verify Your Identity</h1>
                             <p style="margin: 10px 0 0; opacity: 0.9;">Complete your ${type} process</p>

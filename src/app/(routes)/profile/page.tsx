@@ -38,7 +38,7 @@ const Page = () => {
             const newFormData = {
                 firstName: userData.firstName || '',
                 lastName: userData.lastName || '',
-                age: userData.age?.toString() || '',
+                age: userData.age || '',
                 gender: userData.gender || '',
                 allergies: Array.isArray(userData.allergies) ? userData.allergies : [],
                 diseases: Array.isArray(userData.diseases) ? userData.diseases : []

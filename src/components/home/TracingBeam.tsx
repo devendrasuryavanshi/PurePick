@@ -49,7 +49,7 @@ const content = [
     description: (
       <>
         <p className="text-default-foreground">
-          Simply scan your product&apos;s barcode or upload images of its packaging. PurePick&apos;s advanced AI powered by Google Gemini instantly analyzes ingredients, nutritional values, and safety information to provide you with comprehensive insights about your products.
+          Simply scan your product or upload images of its packaging. PurePick&apos;s advanced AI powered by Google Gemini instantly analyzes ingredients, nutritional values, and safety information to provide you with comprehensive insights about your products.
         </p>
         <p className="mt-4 text-default-foreground">
           Our technology combines multiple data sources including OpenFoodFacts, GoUPC, and regulatory databases to ensure you get the most accurate and reliable product information.
