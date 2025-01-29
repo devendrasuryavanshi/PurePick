@@ -163,26 +163,19 @@ We welcome contributions! Please follow these steps:
 
 <div align="center">
   <div style="display: inline-block; margin: 10px;">
-    <img src="/public/doraemon
-/demo1.png" alt="demo1" width="1000"/>
-    <img src="/public/doraemon
-/scanning-demo.png" alt="AI Chat" width="1000"/>
+    <img src="/public/Assets/demo1.png" alt="demo1" width="1000"/>
+    <img src="/public/Assets/scanning-demo.png" alt="AI Chat" width="1000"/>
   </div>
   <div style="display: inline-block; margin: 10px;">
-    <img src="/public/doraemon
-/demo2.png" alt="Analysis Detail" width="1000"/>
-    <img src="/public/doraemon
-/nutrition-demo.png" alt="Ingredients" width="1000"/>
+    <img src="/public/Assets/demo2.png" alt="Analysis Detail" width="1000"/>
+    <img src="/public/Assets/nutrition-demo.png" alt="Ingredients" width="1000"/>
   </div>
   <div style="display: inline-block; margin: 10px;">
-    <img src="/public/doraemon
-/alternative-demo.png" alt="alt" width="1000"/>
-    <img src="/public/doraemon
-/compare-demo.png" alt="alt" width="1000"/>
+    <img src="/public/Assets/alternative-demo.png" alt="alt" width="1000"/>
+    <img src="/public/Assets/compare-demo.png" alt="alt" width="1000"/>
   </div>
   <div style="display: inline-block; margin: 10px;">
-    <img src="/public/doraemon
-/chat-demo.png" alt="chat" width="1000"/>
+    <img src="/public/Assets/chat-demo.png" alt="chat" width="1000"/>
   </div>
 </div>
 
