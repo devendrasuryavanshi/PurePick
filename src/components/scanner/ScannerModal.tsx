@@ -256,7 +256,7 @@ const ScannerModal = ({ isOpen, onOpenChange }: ScannerModalProps) => {
                                 <div className="flex flex-col justify-center items-center gap-2">
                                     <h1 className="dark:text-white text-black">Select Pic</h1>
                                     <p className="text-xs dark:text-gray-400 text-gray-500 text-center">
-                                        Capture or upload exactly <span className="font-bold text-pink-700">2 images</span> of the product, showcasing both the front and back sides.
+                                        Capture or upload exactly <span className="font-bold text-pink-700">2 images</span> of the product, showcasing both the front and back sides (ensuring all details are clearly visible).
                                     </p>
                                 </div>
                             </ModalHeader>

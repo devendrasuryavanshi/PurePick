@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public\Assets\PurePick-logo-white.png" alt="PurePick Logo" width="100"/>
+  <img src="./public/Assets/PurePick-logo-white.png" alt="PurePick Logo" width="100"/>
   <h1>PurePick</h1>
   <p>AI-Powered Product Analysis Platform</p>
 
