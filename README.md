@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/Assets/PurePick-logo-white.png" alt="PurePick Logo" width="100"/>
+  <img src="/public/Assets/PurePick-logo-white.png" alt="PurePick Logo" width="100"/>
   <h1>PurePick</h1>
   <p>AI-Powered Product Analysis Platform</p>
 
@@ -11,7 +11,7 @@
 PurePick revolutionizes how consumers make product choices by providing real-time, AI-powered analysis of consumer products. Our platform combines advanced image processing, natural language understanding, and comprehensive health analysis to deliver instant insights about products.
 
 <div align="center">
-  <img src="public/assets/demo1.png" alt="PurePick Demo" width="1000"/>
+  <img src="/public/assets/demo1.png" alt="PurePick Demo" width="1000"/>
 </div>
 
 ## ✨ Key Features
@@ -23,7 +23,7 @@ PurePick revolutionizes how consumers make product choices by providing real-tim
 - **Real-time Processing**: Instant feedback and results
 
 <div align="center">
-  <img src="public/assets/scanning-demo.png" alt="Scanning Feature" width="1000"/>
+  <img src="/public/assets/scanning-demo.png" alt="Scanning Feature" width="1000"/>
 </div>
 
 ### 🤖 AI Analysis Engine
@@ -34,7 +34,7 @@ PurePick revolutionizes how consumers make product choices by providing real-tim
 - **792+ Date Format Recognition**: Advanced manufacturing and expiry date detection
 
 <div align="center">
-  <img src="public/assets/demo2.png" alt="AI Analysis" width="1000"/>
+  <img src="/public/assets/demo2.png" alt="AI Analysis" width="1000"/>
 </div>
 
 ### 💬 Interactive AI Chat
@@ -44,7 +44,7 @@ PurePick revolutionizes how consumers make product choices by providing real-tim
 - **Multi-turn Dialogue**: Natural conversation flow
 
 <div align="center">
-  <img src="public/assets/chat-demo.png" alt="AI Analysis" width="1000"/>
+  <img src="/public/assets/chat-demo.png" alt="AI Analysis" width="1000"/>
 </div>
 
 ### 📊 Smart Dashboard
@@ -163,19 +163,19 @@ We welcome contributions! Please follow these steps:
 
 <div align="center">
   <div style="display: inline-block; margin: 10px;">
-    <img src="public/assets/demo1.png" alt="demo1" width="1000"/>
-    <img src="public/assets/scanning-demo.png" alt="AI Chat" width="1000"/>
+    <img src="/public/assets/demo1.png" alt="demo1" width="1000"/>
+    <img src="/public/assets/scanning-demo.png" alt="AI Chat" width="1000"/>
   </div>
   <div style="display: inline-block; margin: 10px;">
-    <img src="public/assets/demo2.png" alt="Analysis Detail" width="1000"/>
-    <img src="public/assets/nutrition-demo.png" alt="Ingredients" width="1000"/>
+    <img src="/public/assets/demo2.png" alt="Analysis Detail" width="1000"/>
+    <img src="/public/assets/nutrition-demo.png" alt="Ingredients" width="1000"/>
   </div>
   <div style="display: inline-block; margin: 10px;">
-    <img src="public/assets/alternative-demo.png" alt="alt" width="1000"/>
-    <img src="public/assets/compare-demo.png" alt="alt" width="1000"/>
+    <img src="/public/assets/alternative-demo.png" alt="alt" width="1000"/>
+    <img src="/public/assets/compare-demo.png" alt="alt" width="1000"/>
   </div>
   <div style="display: inline-block; margin: 10px;">
-    <img src="public/assets/chat-demo.png" alt="chat" width="1000"/>
+    <img src="/public/assets/chat-demo.png" alt="chat" width="1000"/>
   </div>
 </div>
 
