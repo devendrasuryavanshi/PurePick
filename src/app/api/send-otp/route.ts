@@ -211,7 +211,7 @@ export async function POST(req: NextRequest) { // send otp
 
         if (res.accepted.length > 0) {
             const hashedOTP = await bcrypt.hash(otp, 10);
-            const isSaved = saveOrUpdateOtp({ email, hashedOTP, type });
+            const isSaved = await saveOrUpdateOtp({ email, hashedOTP, type });
 
             if (!isSaved) {
                 return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });

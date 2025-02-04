@@ -1,17 +1,6 @@
 import { authenticator } from "otplib";
-import NodeCache from "node-cache";
-import { AttemptResponse, canAttemptProps, IpData, OtpData, OtpType, saveOrUpdateOtpProps, saveOrUpdateOtpResponse } from "@/types/otp.types";
-import bcrypt from 'bcryptjs';
+import { AttemptResponse, canAttemptProps, OtpType, saveOrUpdateOtpProps, saveOrUpdateOtpResponse } from "@/types/otp.types";
 
-// Cache Configurations
-const verificationCache = new NodeCache({ stdTTL: 60 * 60 * 24, checkperiod: 10 }); // 24h
-const resetCache = new NodeCache({ stdTTL: 60 * 60 * 24, checkperiod: 10 }); // 24h
-
-// Constants
-const MAX_ATTEMPTS = 5;
-const MAX_IP_REQUESTS = 10;
-const BASE_BACKOFF = 2;
-const EXPIRE_TIME = 5 * 60 * 1000;
 
 // OTP Generation
 export const generateOTP = (): string => {
@@ -20,80 +9,60 @@ export const generateOTP = (): string => {
     return authenticator.generate(secret);
 };
 
-// Cache Selection Helper
-const getTargetCache = (type: OtpType): NodeCache => {
-    return type === 'Verification' ? verificationCache : resetCache;
-};
-
 // Rate Limiting and Attempt Management
 export const canAttempt = async ({ email, type }: canAttemptProps): Promise<AttemptResponse> => {
+    const result = await fetch('https://purepick-backend.onrender.com/api/can-attempt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, type })
+    });
 
-    const targetCache = getTargetCache(type);
-    const data = targetCache.get<OtpData>(email);
-
-    if (!data?.attempts || data.attempts < MAX_ATTEMPTS) {
-        return { allowed: true };
+    if(!result.ok) {
+        return { allowed: false, waitTime: 0 };
     }
 
-    const backoffTime = Math.pow(BASE_BACKOFF, data.attempts) * 1000;
-    const waitTime = (data.lastAttemptTime + backoffTime - Date.now()) / 1000;
-
-    return waitTime > 0
-        ? { allowed: false, waitTime: Math.ceil(waitTime) }
-        : { allowed: true };
+    const data = await result.json();
+    return { allowed: data.allowed, waitTime: data?.waitTime };
 };
 
 // OTP Storage and Update
-export const saveOrUpdateOtp = ({ email, hashedOTP, type }: saveOrUpdateOtpProps): saveOrUpdateOtpResponse => {
-    try {
-        const targetCache = getTargetCache(type);
-        const currentData = targetCache.get<OtpData>(email);
+export const saveOrUpdateOtp = async ({ email, hashedOTP, type }: saveOrUpdateOtpProps): Promise<saveOrUpdateOtpResponse> => {
+    const result = await fetch('https://purepick-backend.onrender.com/api/send-otp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, hashedOTP, type })
+    });
 
-        targetCache.set(email, {
-            attempts: (currentData?.attempts || 0) + 1,
-            otp: hashedOTP,
-            lastAttemptTime: Date.now()
-        });
-
-        return { isSaved: true };
-    } catch (error) {
+    if(!result.ok) {
         return { isSaved: false };
     }
+
+    const data = await result.json();
+
+    return  { isSaved: data.isSent || false };
 };
 
 export const verifyOtp = async (email: string, providedOtp: string, type: OtpType): Promise<{ reason: string; isVerified: boolean }> => {
-    const targetCache = getTargetCache(type);
-    const data = targetCache.get<OtpData>(email);
+    const result = await fetch('https://purepick-backend.onrender.com/api/verify-otp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, otp: providedOtp, type })
+    });
 
-    if (!data) {
-        return { reason: 'No OTP found', isVerified: false };
+    const data = await result.json();
+
+    if (data.error) {
+        return { reason: data.error, isVerified: false };
     }
 
-    if (data.lastAttemptTime + EXPIRE_TIME < Date.now()) {
-        return { reason: 'OTP expired', isVerified: false };
-    }
+    return { reason: '', isVerified: true };
 
-    const isMatch = await bcrypt.compare(providedOtp, data.otp);
-
-    if (isMatch) {
-        return { reason: 'OTP verified successfully', isVerified: true };
-    }
-
-    return { reason: 'Invalid OTP', isVerified: false };
-};
-
-
-// Reset Attempts
-export const resetAttempts = (email: string, type: OtpType): void => {
-    const targetCache = getTargetCache(type);
-    const data = targetCache.get<OtpData>(email);
-    if (data?.otp) {
-        targetCache.set(email, {
-            ...data,
-            attempts: 0,
-            lastAttemptTime: Date.now()
-        });
-    }
 };
 
 export const formatWaitTime = (seconds: number): string => {
