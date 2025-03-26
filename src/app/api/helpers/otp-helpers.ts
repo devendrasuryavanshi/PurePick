@@ -11,7 +11,7 @@ export const generateOTP = (): string => {
 
 // Rate Limiting and Attempt Management
 export const canAttempt = async ({ email, type }: canAttemptProps): Promise<AttemptResponse> => {
-    const result = await fetch('https://purepick-backend.onrender.com/api/can-attempt', {
+    const result = await fetch('https://purepick-backend-b90b.onrender.com/api/can-attempt', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -29,7 +29,7 @@ export const canAttempt = async ({ email, type }: canAttemptProps): Promise<Atte
 
 // OTP Storage and Update
 export const saveOrUpdateOtp = async ({ email, hashedOTP, type }: saveOrUpdateOtpProps): Promise<saveOrUpdateOtpResponse> => {
-    const result = await fetch('https://purepick-backend.onrender.com/api/send-otp', {
+    const result = await fetch('https://purepick-backend-b90b.onrender.com/api/send-otp', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ export const saveOrUpdateOtp = async ({ email, hashedOTP, type }: saveOrUpdateOt
 };
 
 export const verifyOtp = async (email: string, providedOtp: string, type: OtpType): Promise<{ reason: string; isVerified: boolean }> => {
-    const result = await fetch('https://purepick-backend.onrender.com/api/verify-otp', {
+    const result = await fetch('https://purepick-backend-b90b.onrender.com/api/verify-otp', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
