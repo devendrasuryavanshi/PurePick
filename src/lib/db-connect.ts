@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const dbURL = process.env.ATLASDB_URL;
+const dbURL = process.env.MONGODB_URL;
 
 const connectDB = async () => {
     if (mongoose.connections[0].readyState) {
